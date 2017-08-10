@@ -1,0 +1,3 @@
+# Checklist:
+    figure out how to use py2exe to make it easy to use the stuff without dependencies or python installed
+    how do i manage the files and where do i put the executables and the input output(probably not making a UI so there should be an instructions file and an input/output folder)

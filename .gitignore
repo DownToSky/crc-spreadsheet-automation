@@ -1,3 +1,9 @@
+# tmp folder should be ignored
+tmp/
+
+
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
