@@ -39,10 +39,18 @@ def style_range(ws, first_cell, last_cell):
                 ft = Font(name='Courier', bold=True)
             else:
                 ft = Font(name='Courier')
+            border = Border(left=Side(border_style="thin",
+                            color='FF000000'),
+                    right=Side(border_style="thin",
+                            color='FF000000'),
+                    top=Side(border_style="thin",
+                            color='FF000000'),
+                    bottom=Side(border_style="thin"))
             cell = ws.cell(row = r, column = c)
-            al = Alignment(horizontal="center", vertical="center")
+            al = Alignment(wrapText=True, horizontal="center", vertical="center")
             cell.alignment = al
             cell.font = ft
+            cell.border = border
             if r % 2 == 1:
                 fill = PatternFill('solid', fgColor="DDDDDD")
                 cell.fill = fill
@@ -64,7 +72,7 @@ def style_range(ws, first_cell, last_cell):
 if __name__ == "__main__":
     # input csv file location data
     tmp_path = os.path.abspath("../tmp")
-    unformatted_file = "Report for open studies.csv"
+    unformatted_file = "WorkOnFormatting_DATA_LABELS_2017-08-11_1026.csv"
     input_path = os.path.join(tmp_path, unformatted_file)
     
     # output xlsx file location data
