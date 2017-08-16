@@ -1,2 +1,6 @@
-this program uses python3.6 and was designed for windows 
+this program uses python3.5 and was designed for windows 
 uses openpyxl
+executable is made with pyinstaller
+
+to convert to executable run the following:
+pyinstaller formatter.py -F --noconsole
