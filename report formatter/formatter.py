@@ -2,7 +2,9 @@ import os
 import sys
 import time
 import csv
-from tkinter import Tk, Label, Button, filedialog 
+from tkinter import *
+from tkinter import filedialog
+from tkinter import messagebox
 from openpyxl import Workbook
 from openpyxl.styles import Border, Side, PatternFill,\
                             Font, GradientFill, Alignment
@@ -30,7 +32,7 @@ def csv_to_xlsx(input_path):
     with open(input_path) as csv_file:
         for row in csv.reader(csv_file, delimiter=","):
             worksheet.append([_convert_to_number(cell) for cell in row])
-    #assuming it is a valid ".csv" ....    
+        
     return (wb, worksheet)
     
     
@@ -62,11 +64,20 @@ def style_range(ws, first_cell, last_cell):
     # colouring rows after first row
     for r in range(first_cell.row, last_cell.row+1):
         for c in range(first_cell.col_idx, last_cell.col_idx+1): 
+            cell = ws.cell(row = r, column = c)
             # colour odd numbered rows
             if r == first_cell.row:
-                ft = Font(name='Tahoma', bold=True)
+                ft = Font(name='Tahoma', bold=label_bold.get())
+                if isinstance(cell.value, str):
+                    al = Alignment(wrapText=label_wrap_text.get(), horizontal=label_txtHorAl.get(), vertical=label_vertAl.get())
+                else:
+                    al = Alignment(wrapText=True, horizontal=label_numHortAl.get(), vertical=label_vertAl.get())
             else:
-                ft = Font(name='Tahoma')
+                ft = Font(name='Tahoma', bold=data_bold.get())
+                if isinstance(cell.value, str):
+                    al = Alignment(wrapText=data_wrap_text.get(), horizontal=data_txtHorAl.get(), vertical=data_vertAl.get())
+                else:
+                    al = Alignment(wrapText=True, horizontal=data_numHortAl.get(), vertical=data_vertAl.get())
             border = Border(left=Side(border_style="thin",
                             color='FF000000'),
                     right=Side(border_style="thin",
@@ -74,11 +85,7 @@ def style_range(ws, first_cell, last_cell):
                     top=Side(border_style="thin",
                             color='FF000000'),
                     bottom=Side(border_style="thin"))
-            cell = ws.cell(row = r, column = c)
-            if isinstance(cell.value, str):
-                al = Alignment(wrapText=True, horizontal="center", vertical="center")
-            else:
-                al = Alignment(wrapText=True, horizontal="right", vertical="center")
+            
             cell.alignment = al
             cell.font = ft
             cell.border = border
@@ -110,7 +117,11 @@ def format():
     output_file_path = "{}_formatted.xlsx".format(input_file_path[:-4])
     
     # open and convert the csv to xlsx 
-    wb, ws = csv_to_xlsx(input_file_path)
+    try:
+        wb, ws = csv_to_xlsx(input_file_path)
+    except FileNotFoundError:
+        messagebox.showinfo("File not found", "Please use Browse to select a valid .CSV file before attempting to format.")
+        return
     
     # the actual formatting
     first_cell = ws.cell(row=1, column=1)
@@ -124,25 +135,118 @@ def format():
 
 
 
-input_file_path = None
+input_file_path = ""
 def load_file():
     global input_file_path
     input_file_path = filedialog.askopenfilename(title='Choose a file', filetypes = [("CSV Files",".csv")])
     pathlabel.config(text=input_file_path)
     
-# tkFileDialog.askdirectory    
+ 
+showsettings = False
+def hide_settings(event):
+    global showsettings
+    if showsettings is False:
+        bottomFrame.grid()
+        showsettings = True
+        event.widget.config(text="Hide Settings")
+    else:
+        showsettings = False
+        bottomFrame.grid_remove()
+        event.widget.config(text="Show Settings")
+    
+    
     
 if __name__ == "__main__":
     root = Tk()
     root.title("CSV REDCap report formatter")
-    label = Label(root, text=":D")
-    label.pack()
-    browse_button = Button(root, text="Browse", command=load_file)
-    format_button = Button(root, text='Format', font = "Verdana 30 bold", width=15, command=format)
-    exit_button = Button(root, text='Exit', font = "Verdana 20", width=15, command=root.destroy)
-    pathlabel = Label(root)
-    pathlabel.pack()
-    browse_button.pack()
-    format_button.pack()
-    exit_button.pack()
+    root.resizable(width=False, height=False)
+    
+    #top frame
+    topFrame = Frame(root)
+    topFrame.grid(row = 0)
+    browse_button = Button(topFrame, text="Browse", font = "Verdana 12 bold", command=load_file)
+    pathlabel = Label(topFrame, font="Verdana 12", width=100)
+    format_button = Button(topFrame, text='Format', font = "Verdana 12 bold", command=format)
+    settings_button = Button(topFrame, text="Show Settings", font = "Verdana 8", width=12)
+    settings_button.bind('<Button-1>', hide_settings)
+    browse_button.grid(row = 0, sticky = W, padx=5, pady=5)
+    pathlabel.grid(row=0, column = 1, sticky = W, padx=5, pady=5)
+    format_button.grid(row=0, column = 2, sticky = W, padx=5, pady=5, rowspan = 2)
+    settings_button.grid(row=1, sticky = W, padx=5, pady=5)
+    
+    #bottom frame
+    bottomFrame = Frame(root)
+    bottomFrame.grid(row = 1)
+    
+    #bottom left frame
+    blFrame = Frame(bottomFrame)
+    blFrame.grid(row = 0, column = 0)
+    blframe_label = Label(blFrame, text = "Cell Format Settings", font="Verdana 12")
+    boldL = Label(blFrame, text="Bold")
+    wraptextL = Label(blFrame, text="Wrap Text")
+    txtvertalL = Label(blFrame, text="Cell Vertical Alignment")
+    numvertalL = Label(blFrame, text="Textual Cell Horizontal Alignment")
+    horalL = Label(blFrame, text="Numerical Horizontal Alignment")
+    blframe_label.grid(row = 0, padx=20, pady=5)
+    boldL.grid(row = 1,sticky = E, padx=5, pady=5)
+    wraptextL.grid(row=2,sticky = E, padx=5, pady=5)
+    txtvertalL.grid(row=3,sticky = E, padx=5, pady=5)
+    numvertalL.grid(row=4,sticky = E, padx=5, pady=5)
+    horalL.grid(row=5,sticky = E, padx=5, pady=5)
+    
+    
+    #bottom middle frame
+    bmFrame = Frame(bottomFrame)
+    data_bold=IntVar()
+    data_wrap_text=IntVar()
+    data_wrap_text.set(1)
+    data_vertAl= StringVar(bmFrame)
+    data_vertAl.set("center")
+    data_numHortAl= StringVar(bmFrame)
+    data_numHortAl.set("right")
+    data_txtHorAl= StringVar(bmFrame)
+    data_txtHorAl.set("center")
+    bmFrame.grid(row = 0, column = 1)
+    bmframe_label = Label(bmFrame, text = "Data Formatting", font="Verdana 12")
+    bmframe_label.grid(row = 0, padx=20, pady=5)
+    dboldB = Checkbutton(bmFrame, variable=data_bold)
+    dwraptxtB = Checkbutton(bmFrame, variable=data_wrap_text)
+    dvertalB = OptionMenu(bmFrame, data_vertAl,"center", "top", "bottom")
+    dnumhoralB = OptionMenu(bmFrame, data_numHortAl, "center", "right", "left")
+    dtxthoralB = OptionMenu(bmFrame, data_txtHorAl, "center", "right", "left")
+    dboldB.grid(row=1)
+    dwraptxtB.grid(row=2)
+    dvertalB.grid(row=3)
+    dnumhoralB.grid(row=5)
+    dtxthoralB.grid(row=4)
+    
+    
+    
+    #bottom right frame
+    brFrame = Frame(bottomFrame)
+    label_bold=IntVar()
+    label_bold.set(1)
+    label_wrap_text=IntVar()
+    label_wrap_text.set(1)
+    label_vertAl= StringVar(brFrame)
+    label_vertAl.set("center")
+    label_numHortAl= StringVar(brFrame)
+    label_numHortAl.set("right")
+    label_txtHorAl= StringVar(brFrame)
+    label_txtHorAl.set("center")
+    brFrame.grid(row = 0, column = 2)
+    brframe_label = Label(brFrame, text = "Label Formatting", font="Verdana 12")
+    brframe_label.grid(row = 0, padx=20, pady=5)
+    lboldB = Checkbutton(brFrame, variable=label_bold)
+    lwraptxtB = Checkbutton(brFrame, variable=label_wrap_text)
+    lvertalB = OptionMenu(brFrame, label_vertAl,"center", "top", "bottom")
+    lnumhoralB = OptionMenu(brFrame, label_numHortAl, "center", "right", "left")
+    ltxthoralB = OptionMenu(brFrame, label_txtHorAl, "center", "right", "left")
+    lboldB.grid(row=1)
+    lwraptxtB.grid(row=2)
+    lvertalB.grid(row=3)
+    lnumhoralB.grid(row=5)
+    ltxthoralB.grid(row=4)
+    
+    bottomFrame.grid_remove()
     root.mainloop()

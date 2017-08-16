@@ -1,0 +1,2 @@
+this program uses python3.6 and was designed for windows 
+uses openpyxl
