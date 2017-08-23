@@ -30,8 +30,11 @@ def csv_to_xlsx(input_path):
     wb = Workbook()
     worksheet = wb.active
     with open(input_path) as csv_file:
-        for row in csv.reader(csv_file, delimiter=","):
-            worksheet.append([_convert_to_number(cell) for cell in row])
+        for r,row in enumerate(csv.reader(csv_file, delimiter=",")):
+            if r ==0:
+                worksheet.append(["#"]+[_convert_to_number(cell) for cell in row])
+            else:
+                worksheet.append([r]+[_convert_to_number(cell) for cell in row])
         
     return (wb, worksheet)
     
@@ -90,7 +93,7 @@ def style_range(ws, first_cell, last_cell):
             cell.font = ft
             cell.border = border
             if r % 2 == 1:
-                fill = PatternFill('solid', fgColor="DDDDDD")
+                fill = PatternFill('solid', fgColor="efefef")
                 cell.fill = fill
                 
     # fit text to column
@@ -104,7 +107,7 @@ def style_range(ws, first_cell, last_cell):
                 column_widths.append(len(str(cell.value)))
 
     for i, column_width in enumerate(column_widths):
-        ws.column_dimensions[ws.cell(row=1, column=i+1).column].width = column_width
+        ws.column_dimensions[ws.cell(row=1, column=i+1).column].width = max(column_width,8)
 
         
         
