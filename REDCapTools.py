@@ -1,5 +1,5 @@
 import tkinter as tk
-from ChartMaker import ChartMaker
+from ChartMaker import ChartMaker, ChartMakerSettings
 from MonthlyAssessment import MonthlyAssessment
 from CSVFormatter import CSVFormatter
 from tkinter import font
@@ -18,12 +18,13 @@ class REDCapTools(tk.Tk):
         self.title('REDCapTools Menu')
         self.resizable(width=False, height=False)
         self.set_styles()
-        self.frames = {
-            "MainMenu": MainMenu(container, self),
-            "ChartMaker": ChartMaker(container, self),
-            "MonthlyAssessment": MonthlyAssessment(container, self),
-            "CSVFormatter": CSVFormatter(container, self),
-        }
+        frames = self.frames = {}
+        frames["MainMenu"] = MainMenu(container, self)
+        frames["ChartMaker"] = ChartMaker(container, self)
+        frames["MonthlyAssessment"] = MonthlyAssessment(container, self)
+        frames["CSVFormatter"] = CSVFormatter(container, self)
+        frames["ChartMakerSettings"] = ChartMakerSettings(container, self)
+        
         for name, ins in self.frames.items():
             ins.grid(row=0, column=0, sticky="nsew")
         self.show_frame("MainMenu")
@@ -56,15 +57,12 @@ class MainMenu(tk.Frame):
         # drawing the buttons
         charts_btn = ttk.Button(self, text="Chart Maker", command=lambda:self.cont.show_frame("ChartMaker"))
         charts_btn.bind('<Enter>', self.mouseover_charts)
-        charts_btn.bind('<Leave>', self.leave_button)
         
         format_btn = ttk.Button(self, text="CSV Formatter",command=lambda:self.cont.show_frame("CSVFormatter"))
         format_btn.bind('<Enter>', self.mouseover_formatter)
-        format_btn.bind('<Leave>', self.leave_button)
         
         monthly_btn = ttk.Button(self, text="Monthly Assessment", command=lambda:self.cont.show_frame("MonthlyAssessment"))
         monthly_btn.bind('<Enter>', self.mouseover_monthly)
-        monthly_btn.bind('<Leave>', self.leave_button)
         
         btn_padding = {
             "padx": 20,

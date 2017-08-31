@@ -17,7 +17,7 @@ class MonthlyAssessment(tk.Frame):
         s.configure('Kim.TButton', foreground='maroon')
         
         browse_button = ttk.Button(self, text="Browse to CSV file", command=self.browse)
-        process_button = ttk.Button(self, text="Load")
+        process_button = ttk.Button(self, text="Load File")
         Menu_button = ttk.Button(self, text="Back to Menu", style='Kim.TButton', command=lambda:self.cont.show_frame("MainMenu")) 
         self.path = ttk.Entry(self)
         tooltip_box = ttk.LabelFrame(self, text="Tooltip")
