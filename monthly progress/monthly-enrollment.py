@@ -149,7 +149,7 @@ def closing_generate():
 if __name__ == "__main__":
     mainWindow = Tk()
     mainWindow.title("CSV Monthly Progress Calculator")
-    mainWindow. resizable(width=False, height=False)
+    mainWindow.resizable(width=False, height=False)
     mainWindow.geometry("800x64")
     topWindow = Toplevel(mainWindow)
     topWindow.protocol("WM_DELETE_WINDOW", closing_generate)
