@@ -1,6 +1,6 @@
 import tkinter as tk
 from ChartMaker import ChartMaker, ChartMakerSettings
-from MonthlyAssessment import MonthlyAssessment
+from MonthlyAssessment import MonthlyAssessment, MonthlyAssessSettings
 from CSVFormatter import CSVFormatter
 from tkinter import font
 from tkinter import ttk
@@ -24,6 +24,7 @@ class REDCapTools(tk.Tk):
         frames["MonthlyAssessment"] = MonthlyAssessment(container, self)
         frames["CSVFormatter"] = CSVFormatter(container, self)
         frames["ChartMakerSettings"] = ChartMakerSettings(container, self)
+        frames["MonthlyAssessSettings"] = MonthlyAssessSettings(container, self)
         
         for name, ins in self.frames.items():
             ins.grid(row=0, column=0, sticky="nsew")

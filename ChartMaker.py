@@ -64,7 +64,6 @@ class ChartMakerSettings(tk.Frame):
         self.columns = None
         self.widgets = []
         self.draw()
-        path = ""
         
     def draw(self, csv_path=None):
         s = ttk.Style()
@@ -118,6 +117,8 @@ class ChartMakerSettings(tk.Frame):
         self.widgets.append(widget_group)
     
     def remove_row(self):
+        if len(self.widgets) is 1:
+            return
         for w in self.widgets[-1]:
             w.destroy()
         del self.widgets[-1]
