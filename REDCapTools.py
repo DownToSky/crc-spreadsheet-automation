@@ -1,10 +1,10 @@
 import tkinter as tk
-from ChartMaker import ChartMaker, ChartMakerSettings
+#from ChartMaker import ChartMaker, ChartMakerSettings
 from MonthlyAssessment import MonthlyAssessment, MonthlyAssessSettings
 from CSVFormatter import CSVFormatter
-from tkinter import font
-from tkinter import ttk
-from ttkthemes import ThemedStyle
+import tkinter.font as font
+import tkinter.ttk as ttk
+import ttkthemes.ThemedStyle as ThemedStyle
 import sys
 
 class REDCapTools(tk.Tk):
@@ -20,10 +20,10 @@ class REDCapTools(tk.Tk):
         self.set_styles()
         frames = self.frames = {}
         frames["MainMenu"] = MainMenu(container, self)
-        frames["ChartMaker"] = ChartMaker(container, self)
+        #frames["ChartMaker"] = ChartMaker(container, self)
         frames["MonthlyAssessment"] = MonthlyAssessment(container, self)
         frames["CSVFormatter"] = CSVFormatter(container, self)
-        frames["ChartMakerSettings"] = ChartMakerSettings(container, self)
+        #frames["ChartMakerSettings"] = ChartMakerSettings(container, self)
         frames["MonthlyAssessSettings"] = MonthlyAssessSettings(container, self)
         
         for name, ins in self.frames.items():
@@ -56,8 +56,8 @@ class MainMenu(tk.Frame):
     
     def draw(self):
         # drawing the buttons
-        charts_btn = ttk.Button(self, text="Chart Maker", command=lambda:self.cont.show_frame("ChartMaker"))
-        charts_btn.bind('<Enter>', self.mouseover_charts)
+        #charts_btn = ttk.Button(self, text="Chart Maker", command=lambda:self.cont.show_frame("ChartMaker"))
+        #charts_btn.bind('<Enter>', self.mouseover_charts)
         
         format_btn = ttk.Button(self, text="CSV Formatter",command=lambda:self.cont.show_frame("CSVFormatter"))
         format_btn.bind('<Enter>', self.mouseover_formatter)
@@ -70,7 +70,7 @@ class MainMenu(tk.Frame):
             "pady": 10,
             "sticky": "ew"
             }
-        charts_btn.grid(row=0, **btn_padding)
+        #charts_btn.grid(row=0, **btn_padding)
         format_btn.grid(row=1, **btn_padding)
         monthly_btn.grid(row=2, **btn_padding)
         

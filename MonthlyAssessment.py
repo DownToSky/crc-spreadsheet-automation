@@ -93,7 +93,9 @@ class MonthlyAssessSettings(tk.Frame):
             labels = [col[0] for col in self.columns]
             self.id_var = tk.StringVar(self.middle_frame)
             self.study_id_col = ttk.OptionMenu(self.middle_frame, self.id_var, labels[0], *labels)
-            self.study_id_col.grid(row=0, columnspan=3, sticky="nsew", pady = 20)
+            self.ID_l = ttk.Label(self.middle_frame, text="ID Column:")
+            self.ID_l.grid(row=0, sticky="nsew", pady = 5)
+            self.study_id_col.grid(row=1, columnspan=3, sticky="nsew", pady = 5)
             
             self.add_row()
     
@@ -120,7 +122,7 @@ class MonthlyAssessSettings(tk.Frame):
         switchbtn.var1 = curr_en_var
         switchbtn.var2 = last_en_var
         
-        r = 1 + 4*len(self.widgets)
+        r = 2 + 4*len(self.widgets)
         sep.grid(row=r, columnspan=3, sticky="nsew", pady = 10)
         L1.grid(row=r+1, column=0, sticky="nsew", padx=5)
         L2.grid(row=r+1, column=2, sticky="nsew", padx=5)
@@ -199,6 +201,7 @@ class MonthlyAssessSettings(tk.Frame):
             for w in widget_group:
                 w.destroy()
         self.study_id_col.destroy()
+        self.ID_l.destroy()
         self.columns = None
         self.widgets = []
         self.path = ""
